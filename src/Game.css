@@ -26,21 +26,31 @@
 .board-tile {
   width: 60px;
   height: 60px;
-  border: 1px solid black;
+  border: 2px solid rgba(0,0,0,0);
+  padding: auto;
 }
 
-.white {
+.tile-unmarked {
   background: #eee;
 }
 
-.black {
-  background: #111;
+.tile-marked {
+  background: #f9d;
 }
 
-.current {
-  background: #f9f;
+.tile-current {
+  background: #c8f;
+  background-image: url(./knight-icon.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
-.possible {
-  background: #cfc;
+.tile-possible {
+  background: #eee;
+  border: 2px solid #9de;
+}
+
+.tile-possible-marked {
+  background: #f9d;
+  border: 2px solid #9de;
 }
