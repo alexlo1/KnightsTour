@@ -1,12 +1,13 @@
 .game {
   display: flex;
   flex-direction: horizontal;
-  width: 700px;
+  width: 800px;
   margin: auto;
+  font-size: 18px;
 }
 
 .game-info {
-  width: 100px;
+  width: 150px;
 }
 
 .game-board {
@@ -15,7 +16,22 @@
 }
 
 .game-settings {
+  width: 150px;
+}
+
+.button {
   width: 100px;
+  margin: 5px auto;
+  border: 3px solid #9de;
+  text-align: center;
+}
+
+.button:active {
+  border: 3px solid #fde;
+}
+
+.board {
+  border: 2px solid #9de;
 }
 
 .board-row {

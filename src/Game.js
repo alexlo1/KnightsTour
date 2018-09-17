@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import './Game.css';
 
+/* Ensures the row and column are on the board */
 function validTile(r, c) {
   return r >= 0 && r < 8 && c >= 0 && c < 8;
 }
 
+/* Ensures that the move is one of the possible moves */
 function validMove(board, r, c) {
   return validTile(r, c) && (board[r*8+c] === 3 || board[r*8+c] === 4);
 }
 
+/* Highlights possible moves */
 function setPossibleMoves(board, r, c) {
   const knightPaths = [
     [1, 2], [2, 1], [-1, 2], [-2, 1], [-1, -2], [-2, -1], [1, -2], [2, -1],
@@ -26,6 +29,7 @@ function setPossibleMoves(board, r, c) {
   });
 }
 
+/* Checks if all tiles have been marked */
 function checkWin(board) {
   for(let i = 0; i < board.length; i++) {
     if(board[i] === 0 || board[i] === 3) return false;
@@ -33,6 +37,14 @@ function checkWin(board) {
   return true;
 }
 
+/* Functional tile component
+ * Tile types:
+ * 0: Unmarked tile, not a possible next move
+ * 1: Marked tile, not a possible next move
+ * 2: The most recent move
+ * 3: Unmarked tile, possible next move
+ * 4: Marked tile, possible next move
+ */
 function Tile(props) {
   let classList = 'board-tile ';
   switch(props.type) {
@@ -61,6 +73,9 @@ function Tile(props) {
   );
 }
 
+/* Board component
+ * Renders 64 tiles
+ */
 class Board extends Component {
   renderRow(r) {
     return (
@@ -90,7 +105,7 @@ class Board extends Component {
 
   render() {
     return (
-      <div>
+      <div className="board">
         {this.renderRow(0)}
         {this.renderRow(1)}
         {this.renderRow(2)}
@@ -104,6 +119,9 @@ class Board extends Component {
   }
 }
 
+/* Game component
+ * Handles game status, history, info
+ */
 export default class Game extends Component {
   constructor(props) {
     super(props);
@@ -164,13 +182,21 @@ export default class Game extends Component {
     });
   }
 
+  restart() {
+    const history = this.state.history;
+    this.setState({
+      history: history.slice(0, 1),
+      currentTile: null,
+    });
+  }
+
   render() {
     const history = this.state.history;
     const current = history[history.length - 1];
    
     let status = "Now playing: Move " + history.length;
     if(checkWin(current.board)) {
-      status = "You won at move " + history.length + "!";
+      status = "You won at move " + (history.length - 1) + "!";
     }
 
     return (
@@ -185,9 +211,12 @@ export default class Game extends Component {
           />
         </div>
         <div className="game-settings">
-          <button onClick={() => this.undo()}>
+          <div className="button" onClick={() => this.undo()}>
             Undo
-          </button>
+          </div>
+          <div className="button" onClick={() => this.restart()}>
+            Restart
+          </div>
         </div>
       </div>
     );
