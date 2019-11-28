@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import './Game.css';
 
+const UNMARKED = 'unmarked';
+const MARKED = 'marked';
+const CURRENT = 'current';
+const POSSIBLE = 'possible';
+const POSSIBLE_MARKED = 'possible-marked';
+
 /* Ensures the row and column are on the board */
 function validTile(r, c) {
   return r >= 0 && r < 8 && c >= 0 && c < 8;
@@ -8,7 +14,7 @@ function validTile(r, c) {
 
 /* Ensures that the move is one of the possible moves */
 function validMove(board, r, c) {
-  return validTile(r, c) && (board[r*8+c] === 3 || board[r*8+c] === 4);
+  return validTile(r, c) && (board[r*8+c] === POSSIBLE || board[r*8+c] === POSSIBLE_MARKED);
 }
 
 /* Highlights possible moves */
@@ -17,57 +23,38 @@ function setPossibleMoves(board, r, c) {
     [1, 2], [2, 1], [-1, 2], [-2, 1], [-1, -2], [-2, -1], [1, -2], [2, -1],
   ];
 
-  knightPaths.forEach((pair) => {
+  knightPaths.forEach(pair => {
     let tempr = r + pair[0];
     let tempc = c + pair[1];
-    if(validTile(tempr, tempc) && board[tempr * 8 + tempc] === 0) {
-      board[tempr * 8 + tempc] = 3;
+    if (validTile(tempr, tempc) && board[tempr * 8 + tempc] === UNMARKED) {
+      board[tempr * 8 + tempc] = POSSIBLE;
     }
-    if(validTile(tempr, tempc) && board[tempr * 8 + tempc] === 1) {
-      board[tempr * 8 + tempc] = 4;
+    if (validTile(tempr, tempc) && board[tempr * 8 + tempc] === MARKED) {
+      board[tempr * 8 + tempc] = POSSIBLE_MARKED;
     }
   });
 }
 
 /* Checks if all tiles have been marked */
 function checkWin(board) {
-  for(let i = 0; i < board.length; i++) {
-    if(board[i] === 0 || board[i] === 3) return false;
+  for (let i = 0; i < board.length; i++) {
+    if (board[i] === UNMARKED || board[i] === POSSIBLE) return false;
   }
   return true;
 }
 
 /* Functional tile component
  * Tile types:
- * 0: Unmarked tile, not a possible next move
- * 1: Marked tile, not a possible next move
- * 2: The most recent move
- * 3: Unmarked tile, possible next move
- * 4: Marked tile, possible next move
+ * Unmarked tile, not a possible next move
+ * Marked tile, not a possible next move
+ * Current tile, the most recent move
+ * Unmarked tile, possible next move
+ * Marked tile, possible next move
  */
 function Tile(props) {
-  let classList = 'board-tile ';
-  switch(props.type) {
-    case 0:
-      classList += "tile-unmarked ";
-      break;
-    case 1:
-      classList += "tile-marked ";
-      break;
-    case 2:
-      classList += "tile-current ";
-      break;
-    case 3:
-      classList += "tile-possible ";
-      break;
-    case 4:
-      classList += "tile-possible-marked ";
-      break;
-    default:
-  }
   return (
     <div 
-      className={classList}
+      className={'board-tile tile-'+props.type}
       onClick={props.onClick}
     />
   );
@@ -77,43 +64,33 @@ function Tile(props) {
  * Renders 64 tiles
  */
 class Board extends Component {
-  renderRow(r) {
-    return (
-      <div className="board-row">
-        {this.renderTile(r, 0)}
-        {this.renderTile(r, 1)}
-        {this.renderTile(r, 2)}
-        {this.renderTile(r, 3)}
-        {this.renderTile(r, 4)}
-        {this.renderTile(r, 5)}
-        {this.renderTile(r, 6)}
-        {this.renderTile(r, 7)}
-      </div>
-    );
-  }
-  
   renderTile(r, c) {
     return (
       <Tile 
         row={r}
         col={c}
-        onClick={() => this.props.onClick(r, c)}
+        onClick={() => this.props.click(r, c)}
         type={this.props.board[r*8+c]}
       />
+    );
+  }
+
+  renderRow(r) {
+    return (
+      <div className="board-row">
+        {[...Array(8).keys()].map(c => (
+          this.renderTile(r, c)
+        ))}
+      </div>
     );
   }
 
   render() {
     return (
       <div className="board">
-        {this.renderRow(0)}
-        {this.renderRow(1)}
-        {this.renderRow(2)}
-        {this.renderRow(3)}
-        {this.renderRow(4)}
-        {this.renderRow(5)}
-        {this.renderRow(6)}
-        {this.renderRow(7)}
+        {[...Array(8).keys()].map(r => (
+          this.renderRow(r)
+        ))}
       </div>
     );
   }
@@ -127,25 +104,29 @@ export default class Game extends Component {
     super(props);
     this.state = {
       history: [{
-        board: Array(64).fill(3),
+        board: Array(64).fill(POSSIBLE),
       }],
       currentTile: null,
     };
+
+    this.handleClick = this.handleClick.bind(this);
+    this.undo = this.undo.bind(this);
+    this.restart = this.restart.bind(this);
   }
 
   handleClick(r, c) {
     const history = this.state.history;
     const current = history[history.length - 1];
     const board = current.board.slice();
-    if(checkWin(board) || !validMove(board, r, c)) {
+    if (checkWin(board) || !validMove(board, r, c)) {
       return;
     }
-    for(let i = 0; i < board.length; i++) {
-    if(board[i] === 2) board[i] = 1;
-      if(board[i] === 3) board[i] = 0;
-      if(board[i] === 4) board[i] = 1;
+    for (let i = 0; i < board.length; i++) {
+      if (board[i] === CURRENT) board[i] = MARKED;
+      if (board[i] === POSSIBLE) board[i] = UNMARKED;
+      if (board[i] === POSSIBLE_MARKED) board[i] = MARKED;
     }
-    board[r * 8 + c] = 2;
+    board[r * 8 + c] = CURRENT;
     setPossibleMoves(board, r, c);
     this.setState({
       history: history.concat([{
@@ -160,7 +141,7 @@ export default class Game extends Component {
 
   undo() {
     const history = this.state.history;
-    if(history.length <= 1) {
+    if (history.length <= 1) {
       return;
     }
 
@@ -168,8 +149,8 @@ export default class Game extends Component {
     let c = -1;
     for(let i = 0; i < 64; i++) {
       let previousBoard = history[history.length - 2];
-      if(previousBoard[i] === 2) {
-        c = i % 8;;
+      if(previousBoard[i] === CURRENT) {
+        c = i % 8;
         r = (i - (i % 8)) / 8;
       }
     }
@@ -178,7 +159,7 @@ export default class Game extends Component {
       currentTile: {
         row: r,
         col: c,
-      } || null,
+      },
     });
   }
 
@@ -195,7 +176,7 @@ export default class Game extends Component {
     const current = history[history.length - 1];
    
     let status = "Now playing: Move " + history.length;
-    if(checkWin(current.board)) {
+    if (checkWin(current.board)) {
       status = "You won at move " + (history.length - 1) + "!";
     }
 
@@ -207,14 +188,14 @@ export default class Game extends Component {
         <div className="game-board">
           <Board 
             board={current.board}
-            onClick={(r, c) => this.handleClick(r, c)}
+            click={this.handleClick}
           />
         </div>
         <div className="game-settings">
-          <div className="button" onClick={() => this.undo()}>
+          <div className="button" onClick={this.undo}>
             Undo
           </div>
-          <div className="button" onClick={() => this.restart()}>
+          <div className="button" onClick={this.restart}>
             Restart
           </div>
         </div>
