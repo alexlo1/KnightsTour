@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './Game.css';
+import Board from './Board';
 
 const UNMARKED = 'unmarked';
 const MARKED = 'marked';
@@ -41,59 +42,6 @@ function checkWin(board) {
     if (board[i] === UNMARKED || board[i] === POSSIBLE) return false;
   }
   return true;
-}
-
-/* Functional tile component
- * Tile types:
- * Unmarked tile, not a possible next move
- * Marked tile, not a possible next move
- * Current tile, the most recent move
- * Unmarked tile, possible next move
- * Marked tile, possible next move
- */
-function Tile(props) {
-  return (
-    <div 
-      className={'board-tile tile-'+props.type}
-      onClick={props.onClick}
-    />
-  );
-}
-
-/* Board component
- * Renders 64 tiles
- */
-class Board extends Component {
-  renderTile(r, c) {
-    return (
-      <Tile 
-        row={r}
-        col={c}
-        onClick={() => this.props.click(r, c)}
-        type={this.props.board[r*8+c]}
-      />
-    );
-  }
-
-  renderRow(r) {
-    return (
-      <div className="board-row">
-        {[...Array(8).keys()].map(c => (
-          this.renderTile(r, c)
-        ))}
-      </div>
-    );
-  }
-
-  render() {
-    return (
-      <div className="board">
-        {[...Array(8).keys()].map(r => (
-          this.renderRow(r)
-        ))}
-      </div>
-    );
-  }
 }
 
 /* Game component
@@ -147,9 +95,9 @@ export default class Game extends Component {
 
     let r = -1;
     let c = -1;
-    for(let i = 0; i < 64; i++) {
+    for (let i = 0; i < 64; i++) {
       let previousBoard = history[history.length - 2];
-      if(previousBoard[i] === CURRENT) {
+      if (previousBoard[i] === CURRENT) {
         c = i % 8;
         r = (i - (i % 8)) / 8;
       }
@@ -185,12 +133,10 @@ export default class Game extends Component {
         <div className="game-info">
           {status}
         </div>
-        <div className="game-board">
-          <Board 
-            board={current.board}
-            click={this.handleClick}
-          />
-        </div>
+        <Board
+          board={current.board}
+          click={this.handleClick}
+        />
         <div className="game-settings">
           <div className="button" onClick={this.undo}>
             Undo
