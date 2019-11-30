@@ -9,8 +9,11 @@ import './Game.css';
  * Unmarked tile, possible next move
  * Marked tile, possible next move
  */
-const Tile = ({ type, onClick }) => (
-  <div className={'board-tile tile-' + type} onClick={onClick} />
+const Tile = ({ type, row, col, onClick }) => (
+  <div
+    className={'board-tile tile-' + type + ' ' + ((row+col) % 2 === 0 ? 'white' : 'black')}
+    onClick={onClick}
+  />
 );
 
 /* Board component
@@ -18,7 +21,8 @@ const Tile = ({ type, onClick }) => (
  */
 const Board = ({ board, click }) => {
   const renderTile = (r, c) => (
-    <Tile 
+    <Tile
+      key={r+','+c}
       row={r}
       col={c}
       onClick={() => click(r, c)}
@@ -27,7 +31,7 @@ const Board = ({ board, click }) => {
   );
 
   const renderRow = (r) => (
-    <div className="board-row">
+    <div className="board-row" key={r}>
       {[...Array(8).keys()].map(c => (
         renderTile(r, c)
       ))}

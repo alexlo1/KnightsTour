@@ -66,9 +66,9 @@ export default class Game extends Component {
     const history = this.state.history;
     const current = history[history.length - 1];
     const board = current.board.slice();
-    if (checkWin(board) || !validMove(board, r, c)) {
-      return;
-    }
+    
+    if (checkWin(board) || !validMove(board, r, c)) return;
+
     for (let i = 0; i < board.length; i++) {
       if (board[i] === CURRENT) board[i] = MARKED;
       if (board[i] === POSSIBLE) board[i] = UNMARKED;
@@ -95,8 +95,8 @@ export default class Game extends Component {
 
     let r = -1;
     let c = -1;
+    const previousBoard = history[history.length - 2];
     for (let i = 0; i < 64; i++) {
-      let previousBoard = history[history.length - 2];
       if (previousBoard[i] === CURRENT) {
         c = i % 8;
         r = (i - (i % 8)) / 8;
