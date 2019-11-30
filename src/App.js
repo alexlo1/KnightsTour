@@ -7,11 +7,9 @@ export default class App extends Component {
   render() {
     return (
       <div className="app">
-        <header className="app-header">
+        <div className="app-main">
           <img src={logo} className="app-logo" alt="logo" />
           <h1 className="app-title">Welcome to Mr. Knight's Wild Tour</h1>
-        </header>
-        <div className="app-main">
           <Game />
         </div>
       </div>

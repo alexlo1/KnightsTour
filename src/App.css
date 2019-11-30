@@ -6,18 +6,13 @@
   height: 80px;
 }
 
-.app-header {
-  background-color: #dbf;
-  height: 120px;
-  padding: 20px;
-  color: #24f;
-}
-
 .app-title {
   font-size: 1.5em;
 }
 
 .app-main {
+  height: 100vh;
   padding: 20px;
+  background-color: #dbf;
 }
 
