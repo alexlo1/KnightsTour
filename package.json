@@ -8,9 +8,22 @@
     "react-scripts": "^1.1.5"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexlo1/KnightsTour.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alexlo1/KnightsTour/issues"
+  },
+  "homepage": "https://alexlo1.github.io/KnightsTour/",
+  "devDependencies": {
+    "gh-pages": "^2.1.1"
   }
 }
