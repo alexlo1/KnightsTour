@@ -18,12 +18,17 @@
   width: 100px;
   margin: 5px auto;
   border: 3px solid #000;
+  border-radius: 5px;
   text-align: center;
   cursor: pointer;
 }
 
+.button:hover {
+  border: 3px solid #fce;
+}
+
 .button:active {
-  border: 3px solid #d0d;
+  border: 3px solid #f9d;
 }
 
 .board {
@@ -66,7 +71,15 @@
   cursor: pointer;
 }
 
+.tile-possible:hover {
+  background: #fce;
+}
+
 .tile-possible-marked {
   background: #f9d;
   cursor: pointer;
+}
+
+.tile-possible-marked:hover {
+  background: #fce;
 }

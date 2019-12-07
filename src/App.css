@@ -1,5 +1,8 @@
 .app {
   text-align: center;
+  height: 100vh;
+  padding: 20px;
+  background-color: #acf;
 }
 
 .app-logo {
@@ -9,10 +12,3 @@
 .app-title {
   font-size: 1.5em;
 }
-
-.app-main {
-  height: 100vh;
-  padding: 20px;
-  background-color: #dbf;
-}
-
