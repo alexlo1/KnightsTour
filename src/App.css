@@ -1,6 +1,6 @@
 .app {
   text-align: center;
-  height: 100vh;
+  height: calc(100vh - 40px);
   padding: 20px;
   background-color: #acf;
 }

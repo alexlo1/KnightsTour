@@ -1,16 +1,12 @@
 .game {
   display: flex;
-  flex-direction: horizontal;
+  flex-direction: row;
   width: 800px;
   margin: auto;
   font-size: 18px;
 }
 
-.game-info {
-  width: 150px;
-}
-
-.game-settings {
+.game-info, .game-settings {
   width: 150px;
 }
 
@@ -42,8 +38,8 @@
 }
 
 .board-tile {
-  width: 60px;
-  height: 60px;
+  width: 58.5px;
+  height: 58.5px;
   border: 2px solid rgba(0,0,0,0);
   padding: auto;
 }
@@ -82,4 +78,81 @@
 
 .tile-possible-marked:hover {
   background: #fce;
+}
+
+@media (max-width: 840px) {
+  .game {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .game-info, .game-settings {
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .board {
+    width: 480px;
+  }
+
+  .board-tile {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+@media (max-width: 520px) {
+  .board {
+    width: 440px;
+  }
+
+  .board-tile {
+    width: 51px;
+    height: 51px;
+  }
+}
+
+@media (max-width: 480px) {
+  .board {
+    width: 400px;
+  }
+
+  .board-tile {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+@media (max-width: 440px) {
+  .board {
+    width: 360px;
+  }
+
+  .board-tile {
+    width: 41px;
+    height: 41px;
+  }
+}
+
+@media (max-width: 400px) {
+  .board {
+    width: 320px;
+  }
+
+  .board-tile {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 360px) {
+  .board {
+    width: 280px;
+  }
+
+  .board-tile {
+    width: 31px;
+    height: 31px;
+  }
 }
